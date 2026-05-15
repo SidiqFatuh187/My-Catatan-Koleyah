@@ -1,5 +1,4 @@
 services:
-  # Web Server
   nginx:
     image: nginx:alpine
     container_name: todo_nginx
@@ -12,21 +11,18 @@ services:
       - php
     networks:
       - todo_network
-
-  # PHP
   php:
     build:
       context: ./docker/php
       dockerfile: Dockerfile
     container_name: todo_php
+    user: root
     ports:
       - "5173:5173"
     volumes:
       - ./src:/var/www/html
     networks:
       - todo_network
-
-  # Database
   mysql:
     image: mysql:8.0
     container_name: todo_mysql
@@ -42,11 +38,9 @@ services:
       - todo_mysql_data:/var/lib/mysql
     networks:
       - todo_network
-
 networks:
   todo_network:
     driver: bridge
-
 volumes:
   todo_mysql_data:
     driver: local
