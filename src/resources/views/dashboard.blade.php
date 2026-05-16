@@ -14,8 +14,15 @@
         <div class="text-center mb-8">
             <h1 class="text-4xl font-bold text-indigo-600 mb-2">ToDoApp</h1>
             <p class="text-gray-500">Tailwind v4 is working! 🎉</p>
-        </div>
 
+            {{-- Logout --}}
+            <form action="{{ route('logout') }}" method="POST" class="mt-4">
+                @csrf
+                <button type="submit" class="text-sm text-red-500 hover:text-red-700 font-medium">
+                    Logout
+                </button>
+            </form>
+        </div>
         {{-- Card --}}
         <div class="bg-white rounded-2xl shadow-lg p-6 mb-4">
             <h2 class="text-lg font-semibold text-gray-700 mb-4">My Tasks</h2>
