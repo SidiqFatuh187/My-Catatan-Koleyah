@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'ToDoApp')</title>
     @vite(['resources/css/app.css', 'resources/js/layoutsApp.js'])
+    @stack('scripts')
 </head>
 <body class="bg-gray-50 min-h-screen flex">
 
@@ -14,6 +15,14 @@
         @include('layouts.navbar')
 
         <main class="flex-1 p-6">
+             @if(isset($title))
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-gray-800">{{ $title }}</h3>
+                    @if(isset($subtitle))
+                    <p class="text-sm text-gray-400 mt-1">{{ $subtitle }}</p>
+                    @endif
+                </div>
+            @endif
             @yield('content')
         </main>
     </div>
