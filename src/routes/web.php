@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TodoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -30,6 +31,17 @@ Route::middleware('auth')->group(function () {
         Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('edit');
         Route::put('/update/{id}', [CategoryController::class, 'update'])->name('update');
         Route::delete('/delete/{id}', [CategoryController::class, 'destroy'])->name('delete');
+    });
+
+    // Todo route
+    Route::prefix('todo')->name('todo.')->group(function () {
+    Route::get('/', [TodoController::class, 'index'])->name('index');
+    Route::get('/create', [TodoController::class, 'create'])->name('create');
+    Route::post('/store', [TodoController::class, 'store'])->name('store');
+    Route::get('/edit/{id}', [TodoController::class, 'edit'])->name('edit');
+    Route::put('/update/{id}', [TodoController::class, 'update'])->name('update');
+    Route::patch('/status/{id}', [TodoController::class, 'updateStatus'])->name('status');
+    Route::delete('/delete/{id}', [TodoController::class, 'destroy'])->name('delete');
     });
 
 });

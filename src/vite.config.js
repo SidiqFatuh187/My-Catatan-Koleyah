@@ -10,6 +10,7 @@ export default defineConfig({
                 'resources/js/app.js',
                 'resources/js/layoutsApp.js',
                 'resources/js/category-create.js',
+                'resources/js/todo-index.js',
             ],
             refresh: true,
             fonts: [
