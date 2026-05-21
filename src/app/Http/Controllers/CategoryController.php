@@ -14,7 +14,12 @@ class CategoryController extends Controller
         $subtitle = 'Daftar Kategori';
 
         $category = Category::where('user_id', Auth::id())
-   //    ->withCount('todos')
+        ->withCount([
+            'todos',
+            'todos as active_count' => fn($q) => $q->where('status', 'active'),
+            'todos as completed_count' => fn($q) => $q->where('status', 'completed'),
+            'todos as pending_count' => fn($q) => $q->where('status', 'pending'),
+            ])
         ->latest()
         ->get();
 
@@ -56,7 +61,7 @@ class CategoryController extends Controller
         $title = 'Kategori';
         $subtitle = 'Edit Kategori';
 
-       $category = Category::where('user_id', Auth::id())->where('id', $id)->firstOrFail();
+       $category = Category::where('user_id', Auth::id())->where('id', $id)->withCount('todos')->firstOrFail();
 
         return view('category.edit', compact('title', 'subtitle', 'category'));
     }

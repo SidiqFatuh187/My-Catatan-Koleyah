@@ -16,9 +16,9 @@ class Category extends Model
     {
         return $this->belongsTo(User::class);
     }
-//** Relasi dengan model Todo
-   // public function todos()
-  //  {
-  //  return $this->hasMany(Todo::class);
-  //  }
+// Relasi dengan model Todo
+   public function todos()
+    {
+        return $this->hasMany(Todo::class);
+    }
 }
