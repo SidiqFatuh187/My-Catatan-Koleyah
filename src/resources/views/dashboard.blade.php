@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('title', 'Dashboard')
-@section('page-title', 'Dashboard')
 
 @section('content')
 <div class="max-w-5xl mx-auto">
@@ -63,12 +62,12 @@
         <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
             <div class="flex items-center justify-between mb-5">
                 <h2 class="text-base font-semibold text-gray-700">My Tasks</h2>
-                <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium px-4 py-2 rounded-xl transition-colors flex items-center gap-1.5">
+                <a href="{{ route('category.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium px-4 py-2 rounded-xl transition-colors flex items-center gap-1.5">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
                     Add Task
-                </button>
+                </a>
             </div>
 
             {{-- Filter Tabs --}}
@@ -77,6 +76,17 @@
                 <button class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 hover:bg-gray-100">Active</button>
                 <button class="px-3 py-1.5 rounded-lg text-xs font-medium text-gray-500 hover:bg-gray-100">Completed</button>
             </div>
+
+
+            @forelse($category as $category)
+                <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold shrink-0"
+                        style="background-color: {{ $category->color }}">
+                        {{ $category->icon ?? strtoupper(substr($category->name, 0, 1)) }}
+                    </div>
+                    <p class="text-sm font-medium text-gray-700">{{ $category->name }}</p>
+                </div>
+            @empty
 
             {{-- Empty State --}}
             <div class="text-center py-12">
@@ -88,6 +98,7 @@
                 <p class="text-gray-700 font-medium text-sm">No tasks yet</p>
                 <p class="text-gray-400 text-xs mt-1">Start by adding your first task!</p>
             </div>
+          @endforelse  
         </div>
 
         {{-- Right Panel --}}

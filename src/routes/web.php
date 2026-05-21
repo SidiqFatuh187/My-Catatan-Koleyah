@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,9 +20,7 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
         // dashboard route
-        Route::get('/dashboard', function () {
-            return view('dashboard');
-        })->name('dashboard');
+     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         // category routes
     Route::prefix('category')->name('category.')->group(function () {
