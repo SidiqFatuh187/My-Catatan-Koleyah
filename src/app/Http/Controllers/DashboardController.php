@@ -5,19 +5,52 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Category;
+use App\Models\Todo;
 
 class DashboardController extends Controller
 {
     public function index()
-    {
-        $title = "Dashboard";
-        $subtitle ="Overview";
-        
-        $category = Category::where('user_id', Auth::id())
+{
+    $title    = 'Dashboard';
+    $subtitle = 'Overview';
+
+    $userId = Auth::id();
+
+    $category = Category::where('user_id', $userId)
+        ->withCount('todos')
         ->latest()
         ->get();
 
-        return view('dashboard', compact('title', 'subtitle', 'category'));
-    }
+    $totalTasks     = Todo::where('user_id', $userId)
+    ->count();
+
+    $completedTasks = Todo::where('user_id', $userId)
+    ->where('status', 'completed')
+    ->count();
+
+    $pendingTasks = Todo::where('user_id', $userId)
+    ->whereIn('status', ['pending', 'active'])
+    ->count();
+
+    $activeTasks    = Todo::where('user_id', $userId)
+    ->where('status', 'active')
+    ->count();
+
+    $highTasks      = Todo::where('user_id', $userId)->where('priority', 'high')->count();
+    $mediumTasks    = Todo::where('user_id', $userId)->where('priority', 'medium')->count();
+    $lowTasks       = Todo::where('user_id', $userId)->where('priority', 'low')->count();
+
+    $recentTodos = Todo::where('user_id', $userId)
+        ->with('category')
+        ->latest()
+        ->take(5)
+        ->get();
+
+    return view('dashboard', compact(
+        'title', 'subtitle', 'category',
+        'totalTasks', 'completedTasks', 'pendingTasks', 'activeTasks',
+        'highTasks', 'mediumTasks', 'lowTasks', 'recentTodos'
+    ));
+}
 }
     
