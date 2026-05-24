@@ -27,31 +27,45 @@
         </div>
     @endif
 
-    {{-- Action Bar --}}
-    <div class="flex items-center justify-between mb-6">
-        <div class="flex items-center gap-3">
-            <p class="text-sm text-gray-400">Total <span class="font-semibold text-gray-600">{{ $todos->count() }}</span> tasks</p>
+   {{-- Action Bar --}}
+<div class="flex items-center justify-between mb-4 gap-3 flex-wrap">
+    <div class="flex items-center gap-2 flex-wrap">
+        <p class="text-sm text-gray-400">Total <span class="font-semibold text-gray-600">{{ $todos->count() }}</span> tasks</p>
 
-            {{-- Filter Status --}}
-            <div class="flex gap-1.5">
-                <a href="{{ route('todo.index') }}"
-                    class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors {{ !request('status') ? 'bg-blue-600 text-white' : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50' }}">
-                    Semua
-                </a>
-                <a href="{{ route('todo.index', ['status' => 'pending']) }}"
-                    class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors {{ request('status') === 'pending' ? 'bg-yellow-500 text-white' : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50' }}">
-                    Pending
-                </a>
-                <a href="{{ route('todo.index', ['status' => 'active']) }}"
-                    class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors {{ request('status') === 'active' ? 'bg-blue-500 text-white' : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50' }}">
-                    Active
-                </a>
-                <a href="{{ route('todo.index', ['status' => 'completed']) }}"
-                    class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors {{ request('status') === 'completed' ? 'bg-green-500 text-white' : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50' }}">
-                    Completed
-                </a>
-            </div>
+        {{-- Filter Status --}}
+        <div class="flex gap-1.5">
+            <a href="{{ route('todo.index', array_merge(request()->query(), ['status' => ''])) }}"
+                class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors {{ !request('status') ? 'bg-blue-600 text-white' : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50' }}">
+                Semua
+            </a>
+            <a href="{{ route('todo.index', array_merge(request()->query(), ['status' => 'pending'])) }}"
+                class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors {{ request('status') === 'pending' ? 'bg-yellow-500 text-white' : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50' }}">
+                Pending
+            </a>
+            <a href="{{ route('todo.index', array_merge(request()->query(), ['status' => 'active'])) }}"
+                class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors {{ request('status') === 'active' ? 'bg-blue-500 text-white' : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50' }}">
+                Active
+            </a>
+            <a href="{{ route('todo.index', array_merge(request()->query(), ['status' => 'completed'])) }}"
+                class="px-3 py-1.5 rounded-lg text-xs font-medium transition-colors {{ request('status') === 'completed' ? 'bg-green-500 text-white' : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50' }}">
+                Completed
+            </a>
         </div>
+
+        {{-- Filter Kategori --}}
+        <select onchange="window.location.href=this.value"
+            class="px-3 py-1.5 rounded-lg text-xs border border-gray-200 text-gray-500 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400 transition">
+            <option value="{{ route('todo.index', array_merge(request()->query(), ['category' => ''])) }}">
+                Semua Kategori
+            </option>
+            @foreach($category as $cat)
+                <option value="{{ route('todo.index', array_merge(request()->query(), ['category' => $cat->id])) }}"
+                    {{ request('category') == $cat->id ? 'selected' : '' }}>
+                    {{ $cat->icon ? $cat->icon . ' ' : '' }}{{ $cat->name }}
+                </option>
+            @endforeach
+        </select>
+    </div>
 
         <a href="{{ route('todo.create') }}"
             class="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors flex items-center gap-2">
@@ -61,7 +75,7 @@
             Tambah Task
         </a>
     </div>
-
+    
     {{-- Empty State --}}
     @if($todos->isEmpty())
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">

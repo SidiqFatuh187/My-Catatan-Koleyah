@@ -13,17 +13,28 @@
     {{-- Right --}}
     <div class="flex items-center gap-4">
 
-        {{-- Search --}}
-        <div class="relative hidden sm:block">
+   {{-- Search --}}
+    <div class="relative" id="search-wrapper">
+        <form action="{{ route('todo.index') }}" method="GET" autocomplete="off">
             <input
                 type="text"
-                placeholder="Search..."
+                id="navbar-search"
+                name="search"
+                value="{{ request('search') }}"
+                placeholder="Search tasks..."
                 class="pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 w-48 bg-gray-50"
             >
             <svg class="w-4 h-4 text-gray-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
+        </form>
+
+        {{-- Dropdown suggest --}}
+        <div id="search-dropdown"
+            class="hidden absolute top-full left-0 mt-1.5 w-72 bg-white rounded-xl border border-gray-100 shadow-lg z-50 overflow-hidden">
+            <div id="search-results" class="py-1"></div>
         </div>
+    </div>
 
         {{-- Icons --}}
         <button class="text-gray-400 hover:text-gray-600">
