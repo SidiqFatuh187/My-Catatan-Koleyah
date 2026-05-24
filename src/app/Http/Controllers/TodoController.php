@@ -15,7 +15,17 @@ class TodoController extends Controller
 
         $todos = Todo::where('user_id', Auth::id())
         ->with('category')
+
+        // Search Filter
         ->when(request('status'), fn($q) => $q->where('status', request('status')))
+
+        ->when(request('category'), fn($q) => $q->where('category_id', 'request'('category')))
+
+        ->when(request('search'), fn($q) => $q->where(function($q) {
+            $q->where('title', 'like', '%' . request('search') . '%')
+            ->orWhere('description', 'like', '%' . request('search') . '%');
+        }))
+
         ->latest()
         ->get();
 
@@ -24,6 +34,36 @@ class TodoController extends Controller
         return view('todo.index', compact('title', 'subtitle', 'todos', 'category'));
     }
 
+    public function search(Request $request)
+    {
+        $query = $request->get('q', '');
+
+        if (strlen($query) < 1) {
+            return response()->json([]);
+        }
+
+        $todos = Todo::where('user_id', Auth::id())
+            ->where(function($q) use ($query) {
+                $q->where('title', 'like', '%' . $query . '%')
+                ->orWhere('description', 'like', '%' . $query . '%');
+            })
+            ->with('category')
+            ->latest()
+            ->take(6)
+            ->get()
+            ->map(fn($todo) => [
+                'id'       => $todo->id,
+                'title'    => $todo->title,
+                'status'   => $todo->status,
+                'priority' => $todo->priority,
+                'category' => $todo->category?->name,
+                'color'    => $todo->category?->color ?? '#94a3b8',
+                'url'      => route('todo.edit', $todo->id),
+            ]);
+
+        return response()->json($todos);
+    }
+    
     public function create()
     {
         $title = 'My Tasks';
