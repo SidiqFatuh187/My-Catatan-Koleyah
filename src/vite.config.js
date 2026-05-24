@@ -11,6 +11,7 @@ export default defineConfig({
                 'resources/js/layoutsApp.js',
                 'resources/js/category-create.js',
                 'resources/js/todo-index.js',
+                'resources/js/navbar-search.js',
             ],
             refresh: true,
             fonts: [
