@@ -1,0 +1,119 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use Illuminate\Routing\Controller;
+use App\Models\User;
+use App\Models\Todo;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
+
+class AdminController extends Controller
+{
+    public function index()
+    {
+        $stats = [
+            'total_users'        => User::count(),
+            'new_users_this_week'=> User::where('created_at', '>=', now()->startOfWeek())->count(),
+            'total_tasks'        => Todo::count(),
+            'completed_tasks'    => Todo::where('status', 'completed')->count(),
+            'completion_rate'    => Todo::count() > 0
+                                        ? round(Todo::where('status', 'completed')->count() / Todo::count() * 100)
+                                        : 0,
+            'overdue_tasks'      => Todo::where('status', '!=', 'completed')
+                                        ->whereNotNull('deadline')
+                                        ->where('deadline', '<', now())
+                                        ->count(),
+        ];
+
+        $recent_users      = User::latest()->take(5)->get();
+        $recent_activities = collect(); // kosong dulu, isi nanti kalau sudah ada ActivityLog
+
+        return view('admin.index', compact('stats', 'recent_users', 'recent_activities'));
+    }
+
+    public function users(Request $request)
+    {
+        $users = User::when($request->search, fn($q) =>
+                        $q->where('name', 'like', "%{$request->search}%")
+                          ->orWhere('email', 'like', "%{$request->search}%")
+                    )
+                    ->withCount('todos')
+                    ->latest()
+                    ->paginate(15);
+
+        return view('admin.users', compact('users'));
+    }
+
+    public function tasks(Request $request)
+    {
+        $tasks = Todo::with(['user', 'category'])
+                    ->when($request->user_id, fn($q) => $q->where('user_id', $request->user_id))
+                    ->when($request->status,  fn($q) => $q->where('status', $request->status))
+                    ->latest()
+                    ->paginate(20);
+
+        $users = User::select('id', 'name')->get();
+
+        return view('admin.tasks', compact('tasks', 'users'));
+    }
+
+    public function categories()
+    {
+        $categories = Category::with('user')
+                        ->withCount('todos')
+                        ->latest()
+                        ->paginate(20);
+
+        return view('admin.categories', compact('categories'));
+    }
+
+    public function activity()
+    {
+        // Siap dikembangkan kalau sudah ada model ActivityLog
+        $activities = collect();
+
+        return view('admin.activity', compact('activities'));
+    }
+
+    public function ban(User $user)
+    {
+        abort_if($user->id === auth()->id(), 403, 'Cannot ban yourself.');
+
+        $user->update(['is_banned' => true]);
+
+        return back()->with('success', "{$user->name} has been banned.");
+    }
+
+    public function unban(User $user)
+    {
+        $user->update(['is_banned' => false]);
+
+        return back()->with('success', "{$user->name} has been unbanned.");
+    }
+
+    public function export()
+    {
+        $users = User::withCount('todos')->get();
+
+        $csv = "ID,Name,Email,Role,Banned,Total Tasks,Joined\n";
+
+        foreach ($users as $user) {
+            $csv .= implode(',', [
+                $user->id,
+                "\"{$user->name}\"",
+                $user->email,
+                $user->role,
+                $user->is_banned ? 'yes' : 'no',
+                $user->todos_count,
+                $user->created_at->format('Y-m-d'),
+            ]) . "\n";
+        }
+
+        return Response::make($csv, 200, [
+            'Content-Type'        => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="users_export_' . now()->format('Ymd') . '.csv"',
+        ]);
+    }
+}
