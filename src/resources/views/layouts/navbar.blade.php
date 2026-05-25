@@ -13,28 +13,28 @@
     {{-- Right --}}
     <div class="flex items-center gap-4">
 
-   {{-- Search --}}
-    <div class="relative" id="search-wrapper">
-        <form action="{{ route('todo.index') }}" method="GET" autocomplete="off">
-            <input
-                type="text"
-                id="navbar-search"
-                name="search"
-                value="{{ request('search') }}"
-                placeholder="Search tasks..."
-                class="pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 w-48 bg-gray-50"
-            >
-            <svg class="w-4 h-4 text-gray-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-        </form>
+        {{-- Search --}}
+        <div class="relative" id="search-wrapper">
+            <form action="{{ route('todo.index') }}" method="GET" autocomplete="off">
+                <input
+                    type="text"
+                    id="navbar-search"
+                    name="search"
+                    value="{{ request('search') }}"
+                    placeholder="Search tasks..."
+                    class="pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 w-48 bg-gray-50"
+                >
+                <svg class="w-4 h-4 text-gray-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </form>
 
-        {{-- Dropdown suggest --}}
-        <div id="search-dropdown"
-            class="hidden absolute top-full left-0 mt-1.5 w-72 bg-white rounded-xl border border-gray-100 shadow-lg z-50 overflow-hidden">
-            <div id="search-results" class="py-1"></div>
+            {{-- Dropdown suggest --}}
+            <div id="search-dropdown"
+                class="hidden absolute top-full left-0 mt-1.5 w-72 bg-white rounded-xl border border-gray-100 shadow-lg z-50 overflow-hidden">
+                <div id="search-results" class="py-1"></div>
+            </div>
         </div>
-    </div>
 
         {{-- Icons --}}
         <button class="text-gray-400 hover:text-gray-600">
@@ -54,6 +54,17 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
         </button>
+
+        {{-- Admin Panel Button --}}
+        @if(auth()->user()->role === 'admin')
+            <a href="{{ route('admin.index') }}"
+               class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100 transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                Admin Panel
+            </a>
+        @endif
 
         {{-- User --}}
         <div class="flex items-center gap-2 pl-3 border-l border-gray-100">

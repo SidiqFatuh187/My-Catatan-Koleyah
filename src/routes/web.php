@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TodoController;
@@ -11,6 +12,19 @@ Route::get('/', function () {
         return view('login');
     });
 
+    // Admin Route
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/',              [AdminController::class, 'index'])->name('index');
+    Route::get('/users',         [AdminController::class, 'users'])->name('users');
+    Route::get('/tasks',         [AdminController::class, 'tasks'])->name('tasks');
+    Route::get('/categories',    [AdminController::class, 'categories'])->name('categories');
+    Route::get('/activity',      [AdminController::class, 'activity'])->name('activity');
+    Route::get('/export',        [AdminController::class, 'export'])->name('export');
+ 
+    Route::patch('/users/{user}/ban',   [AdminController::class, 'ban'])->name('users.ban');
+    Route::patch('/users/{user}/unban', [AdminController::class, 'unban'])->name('users.unban');
+});
+ 
     // Authentication routes
     Route::middleware('guest')->group(function () {
         Route::get('/login', [LoginController::class, 'index'])->name('login');
