@@ -17,7 +17,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/',              [AdminController::class, 'index'])->name('index');
     Route::get('/users',         [AdminController::class, 'users'])->name('users');
     Route::get('/tasks',         [AdminController::class, 'tasks'])->name('tasks');
-    Route::get('/categories',    [AdminController::class, 'categories'])->name('categories');
+    Route::get('/category',    [AdminController::class, 'category'])->name('category');
     Route::get('/activity',      [AdminController::class, 'activity'])->name('activity');
     Route::get('/export',        [AdminController::class, 'export'])->name('export');
  

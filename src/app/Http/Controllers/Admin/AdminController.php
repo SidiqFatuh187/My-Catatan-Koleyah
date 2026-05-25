@@ -28,9 +28,9 @@ class AdminController extends Controller
         ];
 
         $recent_users      = User::latest()->take(5)->get();
-        $recent_activities = collect(); // kosong dulu, isi nanti kalau sudah ada ActivityLog
+        $recent_activity = collect(); // kosong dulu, isi nanti kalau sudah ada ActivityLog
 
-        return view('admin.index', compact('stats', 'recent_users', 'recent_activities'));
+        return view('admin.index', compact('stats', 'recent_users', 'recent_activity'));
     }
 
     public function users(Request $request)
@@ -59,22 +59,22 @@ class AdminController extends Controller
         return view('admin.tasks', compact('tasks', 'users'));
     }
 
-    public function categories()
+    public function category()
     {
-        $categories = Category::with('user')
+        $category= Category::with('user')
                         ->withCount('todos')
                         ->latest()
                         ->paginate(20);
 
-        return view('admin.categories', compact('categories'));
+        return view('admin.category', compact('category'));
     }
 
     public function activity()
     {
         // Siap dikembangkan kalau sudah ada model ActivityLog
-        $activities = collect();
+        $activity = collect();
 
-        return view('admin.activity', compact('activities'));
+        return view('admin.activity', compact('activity'));
     }
 
     public function ban(User $user)
