@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Todo;
 use App\Models\Category;
@@ -82,6 +83,7 @@ class TodoController extends Controller
             'category_id' => 'nullable|exists:category,id',
             'priority'    => 'required|in:low,medium,high',
             'deadline'    => 'nullable|date|after_or_equal:today',
+            'file'        => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:5120',
         ], [
             'title.required'        => 'Judul task wajib diisi.',
             'priority.required'     => 'Priority wajib dipilih.',
@@ -89,6 +91,15 @@ class TodoController extends Controller
             'deadline.date'         => 'Format deadline tidak valid.',
             'deadline.after_or_equal' => 'Deadline tidak boleh sebelum hari ini.',
         ]);
+
+        $filepath  = null;
+        $filename  = null;
+
+        if ($request->hasFile('file')){
+            $file = $request->file('file');
+            $filename = $file->getClientOriginalName();
+            $filepath = $file->storeAs('uploads', $filename, 'public');
+        }
 
         Todo::create([
             'user_id'     => Auth::id(),
@@ -98,6 +109,8 @@ class TodoController extends Controller
             'priority'    => $request->priority,
             'status'      => 'pending',
             'deadline'    => $request->deadline,
+            'file_path'   => $filepath,
+            'file_name'   => $filename,
         ]);
 
         return redirect()->route('todo.index')->with('success', 'Task berhasil ditambahkan.');
@@ -124,9 +137,19 @@ class TodoController extends Controller
             'priority'    => 'required|in:low,medium,high',
             'status'      => 'required|in:active,completed,pending',
             'deadline'    => 'nullable|date',
+            'file' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,png,jpg,jpeg|max:5120',
         ]);
 
          $todo = Todo::where('user_id', Auth::id())->where('id', $id)->firstOrFail();
+
+         // handle file upload
+         if ($request->hasFile('file')){
+            if ($todo->file_path) {
+                Storage::disk('public')->delete($todo->file_path);
+            }
+        $todo->file_name = $request->file('file')->getClientOriginalName();
+        $todo->file_path = $request->file('file')->store('todo-files', 'public');
+         }
 
         try {
         $todo->update([
@@ -137,6 +160,8 @@ class TodoController extends Controller
             'status'       => $request->status,
             'deadline'     => $request->deadline,
             'completed_at' => $request->status === 'completed' ? now() : null,
+            'file_path' => $todo->file_path,
+            'file_name' => $todo->file_name,
         ]);
 
         return redirect()->route('todo.index')->with('success', 'Task berhasil diperbarui.');

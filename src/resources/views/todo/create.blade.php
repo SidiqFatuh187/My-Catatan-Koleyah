@@ -19,7 +19,7 @@
     {{-- Card --}}
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
 
-        <form action="{{ route('todo.store') }}" method="POST" class="flex flex-col gap-5">
+        <form action="{{ route('todo.store') }}" method="POST" enctype="multipart/form-data" class="flex flex-col gap-5">
             @csrf
 
             {{-- Title --}}
@@ -46,9 +46,32 @@
                     class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-700 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none">{{ old('description') }}</textarea>
             </div>
 
+            {{-- File Upload --}}
+            <div>
+                <label for="file" class="block text-sm font-medium text-gray-700 mb-1.5">
+                    Lampiran <span class="text-gray-400 font-normal">(opsional)</span>
+                </label>
+                <input type="file" id="file" name="file"
+                    accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg"
+                    class="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-medium file:bg-blue-50 file:text-blue-600 hover:file:bg-blue-100">
+                <p class="mt-1.5 text-xs text-gray-400">PDF, Word, Excel, atau gambar — maks. 5MB</p>
+
+                {{-- Tampilkan file existing di edit --}}
+                @if(isset($todo) && $todo->file_path)
+                    <div class="mt-2 flex items-center gap-2 p-2.5 bg-gray-50 rounded-xl border border-gray-100">
+                        <svg class="w-4 h-4 text-blue-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                        </svg>
+                        <span class="text-xs text-gray-600 truncate flex-1">{{ $todo->file_name }}</span>
+                        <a href="{{ Storage::url($todo->file_path) }}" target="_blank"
+                            class="text-xs text-blue-600 hover:text-blue-700 shrink-0">Lihat</a>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-400">Upload file baru untuk mengganti yang lama</p>
+                @endif
+            </div>
+
             {{-- Category & Priority --}}
             <div class="grid grid-cols-2 gap-4">
-
                 {{-- Category --}}
                 <div>
                     <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1.5">Kategori</label>
