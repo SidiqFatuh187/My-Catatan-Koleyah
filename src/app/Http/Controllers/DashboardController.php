@@ -46,10 +46,16 @@ class DashboardController extends Controller
         ->take(5)
         ->get();
 
+   $overdueTasks = Todo::where('user_id', $userId)
+            ->whereNotNull('deadline')
+            ->where('deadline', '<', now())
+            ->whereIn('status', ['pending', 'active'])
+            ->count();
+            
     return view('dashboard', compact(
         'title', 'subtitle', 'category',
         'totalTasks', 'completedTasks', 'pendingTasks', 'activeTasks',
-        'highTasks', 'mediumTasks', 'lowTasks', 'recentTodos'
+        'highTasks', 'mediumTasks', 'lowTasks', 'recentTodos','overdueTasks',
     ));
 }
 }

@@ -12,7 +12,7 @@
     </div>
 
     {{-- Stats --}}
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+    <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
 
         <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex items-center gap-4">
             <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
@@ -52,6 +52,19 @@
                 <p class="text-xs text-blue-200 font-medium">Pending</p>
                 <p class="text-2xl font-bold text-white mt-0.5">{{ $pendingTasks }}</p>
                 <p class="text-xs text-blue-200 mt-0.5">{{ $activeTasks }} sedang active</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-red-100 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-red-50 flex items-center justify-center shrink-0">
+                <svg class="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div>
+                <p class="text-xs text-gray-400 font-medium">Overdue</p>
+                <p class="text-2xl font-bold text-red-500 mt-0.5">{{ $overdueTasks }}</p>
+                <p class="text-xs text-gray-400 mt-0.5">task melewati deadline</p>
             </div>
         </div>
 
