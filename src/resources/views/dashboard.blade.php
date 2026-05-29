@@ -76,7 +76,7 @@
         {{-- Todo List --}}
         <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
             <div class="flex items-center justify-between mb-5">
-                <h2 class="text-base font-semibold text-gray-700">Recent Tasks</h2>
+                <h2 class="text-base font-semibold text-gray-700">Tugas Terbaru</h2>
                 <a href="{{ route('todo.create') }}"
                     class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium px-4 py-2 rounded-xl transition-colors flex items-center gap-1.5">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
