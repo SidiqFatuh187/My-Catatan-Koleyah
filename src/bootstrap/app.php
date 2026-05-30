@@ -14,10 +14,11 @@ return Application::configure(basePath: dirname(__DIR__))
      // Banned Middleware   
     $middleware->web(append: [\App\Http\Middleware\CheckBanned::class,]);
 
-        // Admin Middleware
-        $middleware->alias([
-        'admin' => \App\Http\Middleware\AdminMiddleware::class,
-        ]);
+    // Admin Middleware
+    $middleware->alias([
+    'admin' => \App\Http\Middleware\AdminMiddleware::class,
+    ]);
+
     })
 
     ->withExceptions(function (Exceptions $exceptions): void {

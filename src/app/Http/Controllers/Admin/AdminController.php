@@ -8,6 +8,7 @@ use App\Models\Todo;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
+use App\Models\ActivityLog;
 
 class AdminController extends Controller
 {
@@ -69,13 +70,15 @@ class AdminController extends Controller
         return view('admin.category', compact('category'));
     }
 
-    public function activity()
+  public function activity()
     {
-        // Siap dikembangkan kalau sudah ada model ActivityLog
-        $activity = collect();
-
-        return view('admin.activity', compact('activity'));
+    $activity = \App\Models\ActivityLog::with('user')
+        ->latest()
+        ->paginate(20);
+ 
+    return view('admin.activity', compact('activity'));
     }
+ 
 
     public function ban(User $user)
     {
