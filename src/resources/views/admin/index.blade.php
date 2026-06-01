@@ -210,9 +210,21 @@
                 </p>
             </div>
         </div>
+
         @empty
         <div class="py-10 text-center text-sm text-gray-400">No activity yet.</div>
         @endforelse
+
+        {{-- View all --}}
+        @if($recent_activity->count() >= 8)
+        <div class="px-5 py-3 border-t border-gray-100">
+            <a href="{{ route('admin.activity') }}"
+               class="text-xs font-semibold text-blue-600 hover:text-blue-700">
+                View all activity →
+            </a>
+        </div>
+        @endif
+        
     </div>
 
 </div>

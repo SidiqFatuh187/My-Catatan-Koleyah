@@ -29,7 +29,7 @@ class AdminController extends Controller
         ];
 
         $recent_users      = User::latest()->take(5)->get();
-        $recent_activity = collect(); // kosong dulu, isi nanti kalau sudah ada ActivityLog
+        $recent_activity = \App\Models\ActivityLog::with('user')->latest()->take(8)->get();
 
         return view('admin.index', compact('stats', 'recent_users', 'recent_activity'));
     }
