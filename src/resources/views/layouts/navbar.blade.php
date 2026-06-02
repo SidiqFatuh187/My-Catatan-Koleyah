@@ -36,12 +36,82 @@
             </div>
         </div>
 
-        {{-- Icons --}}
-        <button class="relative text-gray-400 hover:text-gray-600">
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-            </svg>
-        </button>
+        {{-- Bell Icon + Notification Popup --}}
+        @php
+            $notifications = auth()->user()->notifications()->latest()->take(10)->get();
+            $unreadCount   = auth()->user()->unreadNotifications()->count();
+        @endphp
+
+        <div class="relative flex items-center" id="notif-wrapper">
+            <button onclick="toggleNotif()" class="relative text-gray-400 hover:text-gray-600">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                {{-- Badge --}}
+                @if($unreadCount > 0)
+                <span class="absolute -top-1.5 -right-1.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                    {{ $unreadCount > 9 ? '9+' : $unreadCount }}
+                </span>
+                @endif
+            </button>
+
+            {{-- Popup --}}
+            <div id="notif-dropdown"
+                class="hidden absolute right-0 top-full mt-2 w-80 bg-white rounded-xl border border-gray-200 shadow-lg z-50 overflow-hidden">
+
+                {{-- Header --}}
+                <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
+                    <p class="text-sm font-semibold text-gray-700">Notification</p>
+                    @if($unreadCount > 0)
+                    <form id="markAllReadForm" action="{{ route('notification.markAllRead') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                    <button onclick="document.getElementById('markAllReadForm').submit();" class="text-xs text-blue-500 hover:text-blue-600 font-medium">
+                        Mark all as read
+                    </button>
+                    @endif
+                </div>
+
+                {{-- List --}}
+                <div class="max-h-80 overflow-y-auto divide-y divide-gray-50">
+                    @forelse($notifications as $notif)
+                    @php $data = $notif->data; @endphp
+                    <div class="flex items-start gap-3 px-4 py-3 {{ is_null($notif->read_at) ? 'bg-blue-50/40' : '' }} hover:bg-gray-50 transition-colors">
+
+                        {{-- Dot --}}
+                        <div class="mt-1.5 shrink-0">
+                            @if(is_null($notif->read_at))
+                                <div class="w-2 h-2 rounded-full
+                                    {{ ($data['type'] ?? '') === 'overdue' ? 'bg-red-400' : (($data['type'] ?? '') === 'due_today' ? 'bg-amber-400' : 'bg-blue-400') }}">
+                                </div>
+                            @else
+                                <div class="w-2 h-2 rounded-full bg-gray-200"></div>
+                            @endif
+                        </div>
+
+                        {{-- Content --}}
+                        <div class="flex-1 min-w-0">
+                            <p class="text-sm text-gray-700 leading-snug">{{ $data['message'] ?? '' }}</p>
+                            <p class="text-[11px] text-gray-400 mt-0.5">{{ $notif->created_at->diffForHumans() }}</p>
+                        </div>
+
+                        {{-- Delete --}}
+                        <button onclick="openDeleteModal('{{ route('notification.destroy', $notif->id) }}', 'this notification')"
+                            class="shrink-0 text-gray-300 hover:text-red-400 transition-colors mt-0.5">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+                    @empty
+                    <div class="py-10 text-center text-sm text-gray-400">
+                        No notifications yet.
+                    </div>
+                    @endforelse
+                </div>
+
+            </div>
+        </div>
 
         <a href="{{ route('dashboard') }}" class="text-gray-400 hover:text-gray-600">
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -71,4 +141,8 @@
         </div>
 
     </div>
+
+ @push('scripts')
+    <script src="{{ Vite::asset('resources/js/notifications.js') }}"></script>
+@endpush
 </header>

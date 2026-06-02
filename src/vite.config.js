@@ -12,6 +12,7 @@ export default defineConfig({
                 'resources/js/category-create.js',
                 'resources/js/todo-index.js',
                 'resources/js/navbar-search.js',
+                'resources/js/notifications.js',
             ],
             refresh: true,
             fonts: [

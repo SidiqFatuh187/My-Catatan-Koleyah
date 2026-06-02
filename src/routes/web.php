@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TodoController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -58,6 +59,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/status/{id}', [TodoController::class, 'updateStatus'])->name('status');
     Route::delete('/delete/{id}', [TodoController::class, 'destroy'])->name('delete');
     });
+
+    Route::post('/notification/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notification.markAllRead');
+    Route::delete('/notification/{id}',        [NotificationController::class, 'destroy'])->name('notification.destroy');
 
 });
 
