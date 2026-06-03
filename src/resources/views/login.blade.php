@@ -18,11 +18,11 @@
 
             <div class="relative z-10">
                 <h2 class="text-3xl font-bold text-gray-800 leading-tight mb-3">
-                    Fast, Efficient<br>and Productive
+                   Cepat, Efisien<br>dan Produktif
                 </h2>
                 <p class="text-gray-600 text-sm leading-relaxed">
-                    Manage your daily tasks with ease.<br>
-                    Stay focused and get things done.
+                    Kelola tugas harian Anda dengan mudah.<br>
+                    Tetap fokus dan selesaikan pekerjaan.
                 </p>
             </div>
         </div>
@@ -32,7 +32,7 @@
             <div class="w-full max-w-sm">
 
                 <h2 class="text-2xl font-bold text-gray-800 mb-1">Sign In</h2>
-                <p class="text-gray-400 text-sm mb-7">Welcome back to ToDoApp</p>
+                <p class="text-gray-400 text-sm mb-7">Welcome back to CLARO </p>
 
                   <!-- Error Alert -->
                     @if ($errors->any())

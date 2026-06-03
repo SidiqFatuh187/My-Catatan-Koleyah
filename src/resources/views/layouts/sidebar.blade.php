@@ -2,7 +2,7 @@
 
     {{-- Logo --}}
     <div class="px-6 py-6">
-        <h1 class="text-xl font-bold text-white tracking-wide">ToDoApp</h1>
+        <h1 class="text-xl font-bold text-white tracking-wide">CLARO</h1>
     </div>
 
     {{-- Nav Menu --}}

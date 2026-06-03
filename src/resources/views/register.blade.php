@@ -17,11 +17,11 @@
 
             <div class="relative z-10">
                 <h2 class="text-3xl font-bold text-gray-800 leading-tight mb-3">
-                    Fast, Efficient<br>and Productive
+                     Cepat, Efisien<br>dan Produktif
                 </h2>
                 <p class="text-gray-600 text-sm leading-relaxed">
-                    Create your account and start<br>
-                    managing tasks like a pro.
+                    Buat akun Anda dan mulai<br>
+                    mengelola tugas seperti profesional.
                 </p>
             </div>
         </div>
