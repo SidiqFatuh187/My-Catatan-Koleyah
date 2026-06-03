@@ -36,7 +36,18 @@ class TodoController extends Controller
 
         return view('todo.index', compact('title', 'subtitle', 'todos', 'category'));
     }
+    public function show($id)
+    {
+        $title = 'My Tasks';
+        $subtitle = 'Detail Tasks';
 
+        $todo = Todo::where('user_id', Auth::id())
+            ->where('id', $id)
+            ->with('category')
+            ->firstOrFail();
+            
+        return view('todo.show', compact('title', 'subtitle', 'todo'));
+    }
     public function search(Request $request)
     {
         $query = $request->get('q', '');
