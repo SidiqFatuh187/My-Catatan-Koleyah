@@ -50,6 +50,7 @@ Route::middleware('auth')->group(function () {
 
     // Todo route
     Route::get('/todo/search', [TodoController::class, 'search'])->name('todo.search');
+    Route::get('/todo/{id}', [TodoController::class, 'show'])->name('todo.show');
     Route::prefix('todo')->name('todo.')->group(function () {
     Route::get('/', [TodoController::class, 'index'])->name('index');
     Route::get('/create', [TodoController::class, 'create'])->name('create');
