@@ -8,7 +8,7 @@
     </button>
 
     {{-- Page Title --}}
-    <h2 class="text-base font-semibold text-gray-700">@yield('page-title', 'ToDoApp')</h2>
+    <h2 class="text-base font-semibold text-gray-700">@yield('page-title', 'CLARO')</h2>
 
     {{-- Right --}}
     <div class="flex items-center gap-4">
