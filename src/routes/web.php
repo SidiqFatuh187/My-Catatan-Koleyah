@@ -62,6 +62,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/{id}', [TodoController::class, 'show'])->name('show');        
     });
 
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notification/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notification.markAllRead');
     Route::delete('/notification/{id}',        [NotificationController::class, 'destroy'])->name('notification.destroy');
 
