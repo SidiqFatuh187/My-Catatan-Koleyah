@@ -110,6 +110,14 @@
                     @endforelse
                 </div>
 
+                {{-- View all --}}
+                <div class="px-4 py-2.5 border-t border-gray-100">
+                    <a href="{{ route('notifications.index') }}"
+                        class="text-xs font-semibold text-blue-500 hover:text-blue-600 flex items-center justify-center gap-1">
+                        Lihat semua notifikasi →
+                    </a>
+                </div>
+
             </div>
         </div>
 
@@ -142,7 +150,7 @@
 
     </div>
 
- @push('scripts')
-    <script src="{{ Vite::asset('resources/js/notifications.js') }}"></script>
-@endpush
+    @push('scripts')
+        <script src="{{ Vite::asset('resources/js/notifications.js') }}"></script>
+    @endpush
 </header>
