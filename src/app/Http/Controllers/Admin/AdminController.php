@@ -119,4 +119,18 @@ class AdminController extends Controller
             'Content-Disposition' => 'attachment; filename="users_export_' . now()->format('Ymd') . '.csv"',
         ]);
     }
+
+    public function destroyActivitylog(ActivityLog $activity)
+    {
+        $activity->delete();
+
+        return back()->with('success', 'Activity log entry deleted successfully,.');
+    }
+
+    public function destroyAllActivitylogs(ActivityLog $activity)
+    {
+        $activity->truncate();
+
+        return back()->with('success', 'All Activity log entries deleted successfully.,');
+    }
 }

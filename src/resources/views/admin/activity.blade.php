@@ -10,6 +10,8 @@
 
 @section('content')
 
+<x-modal-delete />
+
 {{-- Page Header --}}
 <div class="flex items-center justify-between mb-6">
     <div>
@@ -51,11 +53,22 @@
     @endforeach
 </nav>
 
-{{-- Section Header --}}
-<div class="mb-4">
-    <p class="text-[11px] font-semibold tracking-widest uppercase text-gray-400">Activity Log</p>
-    <p class="text-sm font-semibold text-gray-700 mt-0.5">{{ $activity->total() }} events recorded</p>
-</div>
+    {{-- Section Header --}}
+    <div class="flex items-center justify-between mb-4">
+        <div>
+            <p class="text-[11px] font-semibold tracking-widest uppercase text-gray-400">Activity Log</p>
+            <p class="text-sm font-semibold text-gray-700 mt-0.5">{{ $activity->total() }} events recorded</p>
+        </div>
+        @if($activity->total() > 0)
+        <button onclick="openDeleteModal('{{ route('admin.activity.clearAll') }}', 'semua activity log')"
+            class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-red-500 border border-red-100 rounded-xl hover:bg-red-50 transition-colors">
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+            Clear All
+        </button>
+        @endif
+    </div>
 
 {{-- Activity List --}}
 <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
@@ -95,7 +108,7 @@
         </div>
 
         {{-- Type Badge --}}
-        <div class="shrink-0">
+        <div class="shrink-0 flex items-center gap-2">
             <span class="text-[10px] font-semibold px-2 py-0.5 rounded-lg tracking-wide
                 @if($log->type === 'login')    bg-blue-50 text-blue-600
                 @elseif($log->type === 'logout')   bg-gray-100 text-gray-500
@@ -108,6 +121,14 @@
                 @endif">
                 {{ $log->type }}
             </span>
+
+            {{-- Delete --}}
+            <button onclick="openDeleteModal('{{ route('admin.activity.destroy', $log->id) }}', 'log ini')"
+                class="text-gray-300 hover:text-red-400 transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+            </button>
         </div>
 
     </div>
