@@ -21,11 +21,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::get('/category',    [AdminController::class, 'category'])->name('category');
     Route::get('/activity',      [AdminController::class, 'activity'])->name('activity');
     Route::get('/export',        [AdminController::class, 'export'])->name('export');
+    Route::delete('/activity/clear-all}', [AdminController::class, 'destroyAllActivitylogs'])->name('activity.clearAll');
+    Route::delete('/activity/{activity}', [AdminController::class, 'destroyActivitylog'])->name('activity.destroy');
  
     Route::patch('/users/{user}/ban',   [AdminController::class, 'ban'])->name('users.ban');
     Route::patch('/users/{user}/unban', [AdminController::class, 'unban'])->name('users.unban');
-});
- 
+    });
+
     // Authentication routes
     Route::middleware('guest')->group(function () {
         Route::get('/login', [LoginController::class, 'index'])->name('login');
@@ -48,17 +50,16 @@ Route::middleware('auth')->group(function () {
         Route::delete('/delete/{id}', [CategoryController::class, 'destroy'])->name('delete');
     });
 
-    // Todo route
-    Route::get('/todo/search', [TodoController::class, 'search'])->name('todo.search');
-    Route::get('/todo/{id}', [TodoController::class, 'show'])->name('todo.show');
     Route::prefix('todo')->name('todo.')->group(function () {
-    Route::get('/', [TodoController::class, 'index'])->name('index');
-    Route::get('/create', [TodoController::class, 'create'])->name('create');
-    Route::post('/store', [TodoController::class, 'store'])->name('store');
-    Route::get('/edit/{id}', [TodoController::class, 'edit'])->name('edit');
-    Route::put('/update/{id}', [TodoController::class, 'update'])->name('update');
-    Route::patch('/status/{id}', [TodoController::class, 'updateStatus'])->name('status');
-    Route::delete('/delete/{id}', [TodoController::class, 'destroy'])->name('delete');
+        Route::get('/', [TodoController::class, 'index'])->name('index');
+        Route::get('/search', [TodoController::class, 'search'])->name('search');  
+        Route::get('/create', [TodoController::class, 'create'])->name('create');
+        Route::post('/store', [TodoController::class, 'store'])->name('store');
+        Route::get('/edit/{id}', [TodoController::class, 'edit'])->name('edit');
+        Route::put('/update/{id}', [TodoController::class, 'update'])->name('update');
+        Route::patch('/status/{id}', [TodoController::class, 'updateStatus'])->name('status');
+        Route::delete('/delete/{id}', [TodoController::class, 'destroy'])->name('delete');
+        Route::get('/{id}', [TodoController::class, 'show'])->name('show');        
     });
 
     Route::post('/notification/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notification.markAllRead');
