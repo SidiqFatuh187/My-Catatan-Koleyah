@@ -20,7 +20,7 @@
             @csrf
         </form>
         <button onclick="document.getElementById('markAllReadForm').submit();"
-            class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-blue-600 border border-blue-200 rounded-xl hover:bg-blue-50 transition-colors">
+            class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-indigo-600 border border-indigo-200 rounded-xl hover:bg-indigo-50 transition-colors">
             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
             </svg>
@@ -40,88 +40,112 @@
     @endif
 
     {{-- List --}}
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="flex flex-col gap-3">
 
         @forelse($notifications as $notif)
         @php $data = $notif->data; @endphp
 
-        <div class="flex items-start gap-4 px-5 py-4 border-b border-gray-50 last:border-b-0 hover:bg-gray-50 transition-colors {{ is_null($notif->read_at) ? 'bg-blue-50/30' : '' }}">
+        <div class="relative bg-white rounded-2xl border overflow-hidden transition-all
+            {{ is_null($notif->read_at) ? 'border-indigo-200 shadow-sm shadow-indigo-100' : 'border-gray-100' }}">
 
-            {{-- Dot --}}
-            <div class="mt-2 shrink-0">
-                @if(is_null($notif->read_at))
-                    <div class="w-2 h-2 rounded-full
-                        {{ ($data['type'] ?? '') === 'overdue'   ? 'bg-red-400'   :
-                          (($data['type'] ?? '') === 'due_today' ? 'bg-amber-400' : 'bg-blue-400') }}">
-                    </div>
-                @else
-                    <div class="w-2 h-2 rounded-full bg-gray-200"></div>
-                @endif
+            {{-- Unread accent bar --}}
+            @if(is_null($notif->read_at))
+            <div class="absolute left-0 top-0 bottom-0 w-1 rounded-l-2xl
+                {{ ($data['type'] ?? '') === 'overdue' ? 'bg-red-400' : (($data['type'] ?? '') === 'due_today' ? 'bg-amber-400' : 'bg-indigo-400') }}">
             </div>
+            @endif
 
-            {{-- Icon --}}
-            <div class="w-9 h-9 rounded-xl shrink-0 flex items-center justify-center
-                {{ ($data['type'] ?? '') === 'overdue'   ? 'bg-red-50 text-red-400'     :
-                  (($data['type'] ?? '') === 'due_today' ? 'bg-amber-50 text-amber-400' : 'bg-blue-50 text-blue-400') }}">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
-            </div>
+            <div class="flex items-start gap-4 px-5 py-4 {{ is_null($notif->read_at) ? 'pl-6' : '' }}">
 
-            {{-- Content --}}
-            <div class="flex-1 min-w-0">
-                {{-- Klik pesan → ke todo.show kalau ada task_id --}}
-                @if(isset($data['task_id']))
-                    <a href="{{ route('todo.show', $data['task_id']) }}"
-                        class="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors leading-snug block">
-                        {{ $data['message'] ?? '' }}
-                    </a>
-                @else
-                    <p class="text-sm font-medium text-gray-700 leading-snug">{{ $data['message'] ?? '' }}</p>
-                @endif
-
-                <div class="flex items-center gap-3 mt-1">
-                    <p class="text-xs text-gray-400">{{ $notif->created_at->diffForHumans() }}</p>
-                    <p class="text-xs text-gray-300">·</p>
-                    <p class="text-xs text-gray-400">{{ $notif->created_at->format('d M Y, H:i') }}</p>
-
-                    {{-- Type badge --}}
-                    <span class="text-[10px] font-semibold px-2 py-0.5 rounded-lg
-                        {{ ($data['type'] ?? '') === 'overdue'   ? 'bg-red-50 text-red-500'     :
-                          (($data['type'] ?? '') === 'due_today' ? 'bg-amber-50 text-amber-500' : 'bg-blue-50 text-blue-500') }}">
-                        {{ $data['type'] ?? '' }}
-                    </span>
+                {{-- Icon --}}
+                <div class="w-10 h-10 rounded-xl shrink-0 flex items-center justify-center
+                    {{ ($data['type'] ?? '') === 'overdue'
+                        ? 'bg-red-50 text-red-500'
+                        : (($data['type'] ?? '') === 'due_today'
+                            ? 'bg-amber-50 text-amber-500'
+                            : 'bg-indigo-50 text-indigo-500') }}">
+                    @if(($data['type'] ?? '') === 'overdue')
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                    @elseif(($data['type'] ?? '') === 'due_today')
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    @else
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                    @endif
                 </div>
+
+                {{-- Content --}}
+                <div class="flex-1 min-w-0">
+                    @if(isset($data['task_id']))
+                        <a href="{{ route('todo.show', $data['task_id']) }}"
+                            class="text-sm font-semibold {{ is_null($notif->read_at) ? 'text-gray-800' : 'text-gray-600' }} hover:text-indigo-600 transition-colors leading-snug block">
+                            {{ $data['message'] ?? '' }}
+                        </a>
+                    @else
+                        <p class="text-sm font-semibold {{ is_null($notif->read_at) ? 'text-gray-800' : 'text-gray-600' }} leading-snug">
+                            {{ $data['message'] ?? '' }}
+                        </p>
+                    @endif
+
+                    <div class="flex items-center gap-2 mt-1.5 flex-wrap">
+                        {{-- Type badge --}}
+                        <span class="text-[10px] font-semibold px-2 py-0.5 rounded-lg
+                            {{ ($data['type'] ?? '') === 'overdue'
+                                ? 'bg-red-50 text-red-500'
+                                : (($data['type'] ?? '') === 'due_today'
+                                    ? 'bg-amber-50 text-amber-600'
+                                    : 'bg-indigo-50 text-indigo-600') }}">
+                            {{ ($data['type'] ?? '') === 'overdue' ? 'Overdue' : (($data['type'] ?? '') === 'due_today' ? 'Due Today' : 'Reminder') }}
+                        </span>
+
+                        <span class="text-gray-300 text-xs">·</span>
+                        <p class="text-xs text-gray-400">{{ $notif->created_at->diffForHumans() }}</p>
+                        <span class="text-gray-300 text-xs">·</span>
+                        <p class="text-xs text-gray-400">{{ $notif->created_at->format('d M Y, H:i') }}</p>
+
+                        @if(!is_null($notif->read_at))
+                            <span class="text-gray-300 text-xs">·</span>
+                            <span class="text-[10px] text-gray-400">Dibaca</span>
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Delete --}}
+                <button onclick="openDeleteModal('{{ route('notification.destroy', $notif->id) }}', 'notifikasi ini')"
+                    class="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-gray-300 hover:text-red-400 hover:bg-red-50 transition-colors">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+
             </div>
-
-            {{-- Delete --}}
-            <button onclick="openDeleteModal('{{ route('notification.destroy', $notif->id) }}', 'notifikasi ini')"
-                class="shrink-0 text-gray-300 hover:text-red-400 transition-colors mt-1">
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
-
         </div>
+
         @empty
-        <div class="py-16 text-center">
-            <div class="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg class="w-7 h-7 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <div class="bg-white rounded-2xl border border-gray-100 py-16 text-center">
+            <div class="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <svg class="w-7 h-7 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                 </svg>
             </div>
-            <p class="text-sm font-medium text-gray-500">Belum ada notifikasi</p>
+            <p class="text-sm font-semibold text-gray-500">Belum ada notifikasi</p>
             <p class="text-xs text-gray-400 mt-1">Notifikasi akan muncul saat ada task yang mendekati deadline.</p>
         </div>
         @endforelse
 
-        {{-- Pagination --}}
-        @if($notifications->hasPages())
-        <div class="px-5 py-3.5 border-t border-gray-100">
-            {{ $notifications->links() }}
-        </div>
-        @endif
-
     </div>
+
+    {{-- Pagination --}}
+    @if($notifications->hasPages())
+    <div class="mt-4">
+        {{ $notifications->links() }}
+    </div>
+    @endif
+
 </div>
 @endsection
