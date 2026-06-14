@@ -15,18 +15,29 @@
             <p class="text-sm text-gray-400 mt-0.5">{{ $notifications->total() }} total notifikasi</p>
         </div>
 
-        @if(auth()->user()->unreadNotifications()->count() > 0)
-        <form id="markAllReadForm" action="{{ route('notification.markAllRead') }}" method="POST" class="hidden">
-            @csrf
-        </form>
-        <button onclick="document.getElementById('markAllReadForm').submit();"
-            class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-indigo-600 border border-indigo-200 rounded-xl hover:bg-indigo-50 transition-colors">
-            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-            </svg>
-            Mark all as read
-        </button>
-        @endif
+        <div class="flex items-center gap-2">
+            @if(auth()->user()->unreadNotifications()->count() > 0)
+            <form id="markAllReadForm" action="{{ route('notification.markAllRead') }}" method="POST" class="hidden">
+                @csrf
+            </form>
+            <button onclick="document.getElementById('markAllReadForm').submit();"
+                class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-indigo-600 border border-indigo-200 rounded-xl hover:bg-indigo-50 transition-colors">
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                Mark all as read
+            </button>
+            @endif
+
+            @if($notifications->total() > 0)
+            <button type="button" onclick="openDeleteModal('{{ route('notification.destroyAll') }}', 'semua notifikasi')"
+                class="w-8 h-8 flex items-center justify-center text-gray-400 border border-gray-200 rounded-xl hover:text-red-500 hover:border-red-200 hover:bg-red-50 transition-colors">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+            </button>
+            @endif
+        </div>
     </div>
 
     {{-- Flash --}}
