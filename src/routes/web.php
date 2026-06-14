@@ -7,6 +7,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TodoController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\DueDateController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -67,6 +69,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/notifications/destroy-all', [NotificationController::class, 'destroyAllnotifications'])->name('notification.destroyAll');
     Route::delete('/notification/{id}',        [NotificationController::class, 'destroy'])->name('notification.destroy');
 
+    Route::get('/due-dates', [DueDateController::class, 'index'])->name('due-dates.index');
 });
 
 // Logout route
